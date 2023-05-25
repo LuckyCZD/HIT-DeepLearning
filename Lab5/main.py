@@ -78,7 +78,10 @@ def main(args):
             fake_outputs = D(fake_samples)
 
             # 计算判别器损失
-            D_loss = - (torch.log(real_outputs) + torch.log(1. - fake_outputs)).mean()
+            if args.model == 'GAN':
+                D_loss = - (torch.log(real_outputs) + torch.log(1. - fake_outputs)).mean()
+            else:
+                D_loss = torch.mean(fake_outputs) - torch.mean(real_outputs)
 
             # 清零判别器的梯度
             optim_D.zero_grad()
@@ -101,7 +104,10 @@ def main(args):
                 # 计算生成样本的判别器输出
                 fake_outputs = D(fake_samples)
                 # 计算生成器损失
-                G_loss = torch.log(1. - fake_outputs).mean()
+                if args.model == 'GAN':
+                    G_loss = torch.log(1. - fake_outputs).mean()
+                else:
+                    G_loss = -torch.mean(fake_outputs)
                 # 清零生成器的梯度
                 optim_G.zero_grad()
                 # 反向传播和优化生成器
@@ -133,8 +139,8 @@ def main(args):
     ax2.legend(loc='upper right')
     plt.savefig(args.output_path + args.model + "/loss.jpg")
     # save the model
-    # state = {"model_D": D.state_dict(), "model_G": G.state_dict()}
-    # torch.save(state, args.output_path + 'models/' + args.model + '.pth')
+    state = {"model_D": D.state_dict(), "model_G": G.state_dict()}
+    torch.save(state, args.output_path + 'models/' + args.model + '.pth')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser("lab5")
@@ -142,7 +148,7 @@ if __name__ == '__main__':
     parser.add_argument("--model", default="WGAN-GP")  # GAN WGAN WGAN-GP
     parser.add_argument("--epochs", default=1000)
     parser.add_argument("--batch-size", default=2000)
-    parser.add_argument("--seed", default=40)
+    parser.add_argument("--seed", default=42)
     parser.add_argument("--dataset", default="points")
     parser.add_argument("--output-path", default="./result/")
     parser.add_argument("--hidden-size", default=128)

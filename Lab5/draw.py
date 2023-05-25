@@ -43,4 +43,4 @@ def draw_scatter(D, xy, epoch, model):
     plt.ylim(-0.2, 1)
     plt.scatter(data[:, 0], data[:, 1], c='b', s=10)
     plt.scatter(x, y, c='r', s=10)
-    plt.savefig("./result/" + model + '-sgd/epoch-' + str(epoch) + '.jpg')
+    plt.savefig("./result/" + model + '/epoch-' + str(epoch) + '.jpg')

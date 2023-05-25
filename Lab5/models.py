@@ -1,12 +1,10 @@
 import torch.nn as nn
 
-
 # 定义生成器
 class Generator(nn.Module):
     def __init__(self):
         super(Generator, self).__init__()
         self.net = nn.Sequential(
-            # z: [b, 2] => [b, 2]
             nn.Linear(10, 128),
             nn.ReLU(True),
             nn.Linear(128, 256),
@@ -26,7 +24,6 @@ class Discriminator(nn.Module):
     def __init__(self):
         super(Discriminator, self).__init__()
         self.net = nn.Sequential(
-            # [b, 2] => [b, 1]
             nn.Linear(2, 128),
             nn.LeakyReLU(),
             nn.Linear(128, 256),
@@ -34,7 +31,7 @@ class Discriminator(nn.Module):
             nn.Linear(256, 128),
             nn.LeakyReLU(),
             nn.Linear(128, 1),
-            nn.Sigmoid()
+            # nn.Sigmoid()
         )
 
     def forward(self, x):
